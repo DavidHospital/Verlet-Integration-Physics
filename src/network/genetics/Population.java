@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
 
-import object.NetworkBody;
+import object.physics.NetworkBody;
 
 public class Population {
 	

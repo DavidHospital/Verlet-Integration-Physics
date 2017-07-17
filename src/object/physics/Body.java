@@ -1,8 +1,4 @@
-package object;
-
-import object.physics.Muscle;
-import object.physics.Point;
-import object.physics.Stick;
+package object.physics;
 
 public class Body extends Model {
 	

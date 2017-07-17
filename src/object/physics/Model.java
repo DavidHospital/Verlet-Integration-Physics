@@ -1,10 +1,6 @@
-package object;
+package object.physics;
 
 import java.awt.Graphics;
-
-import object.physics.Muscle;
-import object.physics.Point;
-import object.physics.Stick;
 
 public abstract class Model {
 

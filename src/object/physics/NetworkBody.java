@@ -1,4 +1,4 @@
-package object;
+package object.physics;
 
 import network.NeuralNetwork;
 import network.genetics.DNA;
