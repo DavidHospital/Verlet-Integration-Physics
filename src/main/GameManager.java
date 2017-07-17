@@ -6,7 +6,7 @@ import java.awt.Graphics;
 import object.physicsnew.model.Model;
 
 public class GameManager {
-
+	
 	// Game information
 	long seed;
 	
@@ -34,7 +34,7 @@ public class GameManager {
 		//seed = 5259227212735844L;
 		System.out.println(seed);
 		
-		m = Model.RandomModel(300, 0, 300, 300, seed, this);
+		m = Model.RandomModel(300, 300, 300, 300, seed, this);
 	}
 	
 	void update() {

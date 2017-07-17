@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import main.GameManager;
+import network.dynamic.Network;
 import object.physicsnew.Node;
 import object.physicsnew.Stick;
 
@@ -15,11 +16,26 @@ public class Model {
 	
 	private GameManager gm;
 	
+	private Network network;
+	
 	public Model(Node[] nodes, Stick[] sticks, GameManager gm) {
 		this.nodes = nodes;
 		this.sticks = sticks;
 		
 		this.gm = gm;
+		
+		int[] layerSizes = {sticks.length, sticks.length, sticks.length};
+		network = new Network(layerSizes, 30, 30, 200, 300);
+		double[][][] stickValues = new double[3][sticks.length][sticks.length];
+		for (int i = 0; i < stickValues.length; i ++) {
+			for (int k = 0; k < stickValues[i].length; k ++) {
+				for (int m = 0; m < stickValues[i][k].length; m ++) {
+					stickValues[i][k][m] = new Random().nextDouble();
+				}
+			}
+		}
+		
+		network.updateSticks(stickValues);
 	}
 	
 	public static Model RandomModel(int x, int y, int width, int height, long seed, GameManager gm) {
@@ -54,9 +70,17 @@ public class Model {
 		for (Node n : nodes) {
 			n.update();
 		}
-		for (Stick s : sticks) {
-			s.update();
+		
+		network.update();
+		double[] values = new double[sticks.length];
+		for (int i = 0; i < sticks.length; i ++) {
+			values[i] = sticks[i].getDistance();
 		}
+		double[] newValues = network.forward(values);
+		for (int i = 0; i < sticks.length; i ++) {
+			sticks[i].update(newValues[i]);
+		}
+		
 		for (Node n : nodes) {
 			n.checkCollisions(gm);
 		}
@@ -69,6 +93,7 @@ public class Model {
 		for (Node n : nodes) {
 			n.render(g);
 		}
+		network.render(g);
 		
 	}
 }

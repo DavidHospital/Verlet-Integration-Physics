@@ -19,7 +19,7 @@ public class DNA {
 	}
 	
 	private static double randomNode() {
-		return new Random().nextGaussian() * 10;
+		return new Random().nextGaussian();
 	}
 	
 	public DNA splice (DNA other, double mutationRate) {
@@ -34,7 +34,7 @@ public class DNA {
 			
 			// Mutate current node
 			if (r.nextDouble() < mutationRate) {
-				newNodes[i] += r.nextGaussian() * 10;
+				newNodes[i] += randomNode();
 			}
 		}
 		return new DNA(newNodes);
