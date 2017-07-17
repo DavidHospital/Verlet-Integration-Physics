@@ -21,11 +21,15 @@ public class NetworkStick {
 	
 	public double output() {
 		double ret = input.output();
-		return ret * weight;
+		
+			//System.out.println(weight + "\t" + this);
+			//System.out.println(ret);
+
+		return weight * ret;
 	}
 	
 	void update() {
-		hasDrawn = false;
+		hasDrawn = false;		
 		input.update();
 	}
 	

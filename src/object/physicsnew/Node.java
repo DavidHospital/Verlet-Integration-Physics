@@ -7,9 +7,9 @@ import main.GameManager;
 
 public class Node {
 
-	public static final double RADIUS = 20;
-	public static final double bounce = 0.9f;
-	public static final double gravity = 0.8f;
+	public static final double RADIUS = 10;
+	public static final double bounce = 0.2f;
+	public static final double gravity = 1.0f;
 	
 	private double friction;
 	

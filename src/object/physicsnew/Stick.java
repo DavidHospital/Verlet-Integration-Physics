@@ -36,6 +36,10 @@ public class Stick {
 		return Math.sqrt(dy * dy + dx * dx);
 	}
 	
+	public double getDifference() {
+		return length - getDistance();
+	}
+	
 	public void update() {
 		double dx = n2.x - n1.x;
 		double dy = n2.y - n1.y;

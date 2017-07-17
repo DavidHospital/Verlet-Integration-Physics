@@ -38,12 +38,12 @@ public class Network {
 
 			NetworkNode[] nodes = new NetworkNode[layerSizes[layer]];
 			
+
+			// Recursion
+			NetworkNode[] inputNodes = generateNetwork(layer - 1);
+			
 			for (int i = 0; i < nodes.length; i ++) {
 				NetworkStick[] sticks = new NetworkStick[layerSizes[layer - 1]];
-				
-				// Recursion
-				NetworkNode[] inputNodes = generateNetwork(layer - 1);
-				
 				
 				for (int k = 0; k < inputNodes.length; k ++) {
 					sticks[k] = new NetworkStick(inputNodes[k], 0);
@@ -56,16 +56,13 @@ public class Network {
 	
 	public void updateSticks(double[][][] stickValues) {
 		for (int i = 0; i < outputs.length; i ++) {
-			outputs[i].updateSticks(stickValues, layerSizes.length - 1, i);
+			outputs[i].updateSticks(stickValues, layerSizes.length - 2, i);
 		}
 	}
 	
 	public double[] forward(double[] values) {
 		for (int i = 0; i < inputs.length; i ++) {
-			System.out.print(inputs[i].value + "\t");
-			System.out.print(values[i] + "\t");
-			inputs[i].value = values[i];
-			System.out.println(inputs[i].value);
+			inputs[i].inputValue(values[i]);
 		}
 		double[] ret = new double[outputs.length];
 		for (int i = 0; i < outputs.length; i ++) {

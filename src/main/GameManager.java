@@ -2,13 +2,11 @@ package main;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 import object.physicsnew.model.Model;
 
 public class GameManager {
-	
-	// Game information
-	long seed;
 	
 	// window information
 	int windowWidth;
@@ -22,7 +20,14 @@ public class GameManager {
 	public int floorHeight;
 	
 	// Objects
+	ArrayList<String> pastInfo;
+	int counter;
+	
 	Model m;
+	double startX;
+	
+	// Time
+	long startTime;
 	
 	public GameManager(int windowWidth, int windowHeight) {
 		this.windowWidth = windowWidth;
@@ -30,14 +35,29 @@ public class GameManager {
 		
 		floorHeight = windowHeight - 100;
 		
-		seed = System.nanoTime();
-		//seed = 5259227212735844L;
-		System.out.println(seed);
+		pastInfo = new ArrayList<>();
+		counter = 0;
 		
-		m = Model.RandomModel(300, 300, 300, 300, seed, this);
+		newModel();
+	}
+	
+	private void recordModel() {
+		pastInfo.add("Creature #: " + counter + "   Distance: " + (int)((m.getX() - startX) * 100) / 100.0);
+		counter ++;
+	}
+	
+	private void newModel() {
+		m = Model.RandomModel(300, 300, 200, 200, this);
+		startX = m.getX();
+		
+		startTime = System.currentTimeMillis();
 	}
 	
 	void update() {
+		if (System.currentTimeMillis() - startTime >= 1000) {
+			recordModel();
+			newModel();
+		}
 		m.update();
 	}
 	
@@ -50,5 +70,13 @@ public class GameManager {
 		
 		// Objects
 		m.render(g);
+		
+		g.setColor(new Color(0, 0, 0, 0.1f));
+		g.fillRect(windowWidth - 250, 10, 240, windowHeight - 300);
+		
+		g.setColor(Color.BLACK);
+		for (int i = pastInfo.size() < 16 ? 0 : pastInfo.size() - 15; i < pastInfo.size(); i ++) {
+			g.drawString(pastInfo.get(i), windowWidth - 250 + 5, 25 + (pastInfo.size() < 16 ? i : i - (pastInfo.size() - 15)) * 20);
+		}
 	}
 }

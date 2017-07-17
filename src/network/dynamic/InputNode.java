@@ -7,12 +7,12 @@ public class InputNode extends NetworkNode {
 	}
 	
 	@Override
-	public double output() {
+	double output() {
 		return value;
 	}
 	
 	public void inputValue(double input) {
-		this.value = input;
+		super.value = sigmoid(input);
 	}
 	
 	// Do nothing for inputSticks, as there are no sticks to update

@@ -24,13 +24,17 @@ public class Model {
 		
 		this.gm = gm;
 		
-		int[] layerSizes = {sticks.length, sticks.length, sticks.length};
+		int[] layerSizes = {nodes.length * 2, sticks.length, sticks.length};
 		network = new Network(layerSizes, 30, 30, 200, 300);
-		double[][][] stickValues = new double[3][sticks.length][sticks.length];
+		
+		double[][][] stickValues = {
+				new double[nodes.length * 2][sticks.length],
+				new double[sticks.length][sticks.length]
+		};
 		for (int i = 0; i < stickValues.length; i ++) {
 			for (int k = 0; k < stickValues[i].length; k ++) {
 				for (int m = 0; m < stickValues[i][k].length; m ++) {
-					stickValues[i][k][m] = new Random().nextDouble();
+					stickValues[i][k][m] = new Random().nextGaussian();
 				}
 			}
 		}
@@ -38,8 +42,8 @@ public class Model {
 		network.updateSticks(stickValues);
 	}
 	
-	public static Model RandomModel(int x, int y, int width, int height, long seed, GameManager gm) {
-		Random r = new Random(seed);
+	public static Model RandomModel(int x, int y, int width, int height, GameManager gm) {
+		Random r = new Random();
 		
 		// Nodes
 		ArrayList<Node> nodesList = new ArrayList<Node>();
@@ -66,15 +70,32 @@ public class Model {
 		return new Model(nodes, sticks, gm);	
 	}
 	
+	public double getX() {
+		double sum = 0.0;
+		for (int i = 0; i < nodes.length; i ++) {
+			sum += nodes[i].x;
+		}
+		return sum / nodes.length;
+	}
+	
+	public double getY() {
+		double sum = 0.0;
+		for (int i = 0; i < nodes.length; i ++) {
+			sum += nodes[i].y;
+		}
+		return sum / nodes.length;
+	}
+	
 	public void update() {
 		for (Node n : nodes) {
 			n.update();
 		}
 		
 		network.update();
-		double[] values = new double[sticks.length];
-		for (int i = 0; i < sticks.length; i ++) {
-			values[i] = sticks[i].getDistance();
+		double[] values = new double[nodes.length * 2];
+		for (int i = 0; i < nodes.length; i ++) {
+			values[2 * i] = nodes[i].x - this.getX();
+			values[2 * i + 1] = nodes[i].y - this.getY();
 		}
 		double[] newValues = network.forward(values);
 		for (int i = 0; i < sticks.length; i ++) {

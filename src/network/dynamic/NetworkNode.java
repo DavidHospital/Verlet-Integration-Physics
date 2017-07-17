@@ -30,7 +30,7 @@ public class NetworkNode {
 		return value;
 	}
 	
-	private double sigmoid(double k) {
+	double sigmoid(double k) {
 		return 1.0 / (1.0 + Math.exp(- k));
 	}
 	
@@ -66,7 +66,7 @@ public class NetworkNode {
 			int Y = y - Radius / 2;
 			g.fillOval(X, Y, Radius, Radius);
 
-			g.setColor(Color.WHITE);
+			g.setColor(Color.RED);
 			g.drawString((int)(value * 10) / 10.0 + " ", x - 9, y + 7);
 		}
 	}
