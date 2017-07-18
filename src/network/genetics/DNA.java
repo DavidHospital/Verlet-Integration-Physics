@@ -1,42 +1,17 @@
 package network.genetics;
 
-import java.util.Random;
-
 public class DNA {
 
-	public double[] nodes;
+	public double[] stickWeights;
+	public double[] nodesX;
+	public double[] nodesY;
+	public double[] nodesF;
+	public double[] musclesT;
+	public double[] musclesN1;
+	public double[] musclesN2;
 	
-	public DNA (double[] nodes) {
-		this.nodes = nodes;
+	public DNA () {
+		
 	}
 	
-	public static DNA Random(int size) {
-		double[] nodes = new double[size];
-		for (int i = 0; i < size; i ++) {
-			nodes[i] = randomNode();
-		}
-		return new DNA(nodes);
-	}
-	
-	private static double randomNode() {
-		return new Random().nextGaussian();
-	}
-	
-	public DNA splice (DNA other, double mutationRate) {
-		Random r = new Random();
-		double[] newNodes = new double[nodes.length];
-		for (int i = 0; i < nodes.length; i ++) {
-			if (r.nextBoolean()) {
-				newNodes[i] = this.nodes[i];
-			} else {
-				newNodes[i] = other.nodes[i];
-			}
-			
-			// Mutate current node
-			if (r.nextDouble() < mutationRate) {
-				newNodes[i] += randomNode();
-			}
-		}
-		return new DNA(newNodes);
-	}
 }

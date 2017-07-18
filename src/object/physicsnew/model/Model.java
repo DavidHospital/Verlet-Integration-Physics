@@ -7,20 +7,20 @@ import java.util.Random;
 import main.GameManager;
 import network.dynamic.Network;
 import object.physicsnew.Node;
-import object.physicsnew.Stick;
+import object.physicsnew.Muscle;
 
 public class Model {
 	
 	public Node[] nodes;
-	public Stick[] sticks;
+	public Muscle[] muscles;
 	
 	private GameManager gm;
 	
 	private Network network;
 	
-	public Model(Node[] nodes, Stick[] sticks, GameManager gm) {
+	public Model(Node[] nodes, Muscle[] sticks, GameManager gm) {
 		this.nodes = nodes;
-		this.sticks = sticks;
+		this.muscles = sticks;
 		
 		this.gm = gm;
 		
@@ -52,20 +52,20 @@ public class Model {
 		}
 		
 		// Sticks
-		ArrayList<Stick> sticksList = new ArrayList<>();
+		ArrayList<Muscle> sticksList = new ArrayList<>();
 		for (int i = 0; i < nodesList.size(); i ++) {
 			double stickChance = 1.0;
 			for (int k = i + 1; k < nodesList.size(); k ++) {
 				if (i != k) {
 					if (r.nextDouble() < stickChance) {
-						sticksList.add(new Stick(nodesList.get(i), nodesList.get(k), r.nextDouble()));
+						sticksList.add(new Muscle(nodesList.get(i), nodesList.get(k), r.nextDouble()));
 						stickChance *= 0.75;
 					}
 				}
 			}
 		}
 		
-		Stick[] sticks = sticksList.toArray(new Stick[sticksList.size()]);
+		Muscle[] sticks = sticksList.toArray(new Muscle[sticksList.size()]);
 		Node[] nodes = nodesList.toArray(new Node[nodesList.size()]);
 		return new Model(nodes, sticks, gm);	
 	}
@@ -86,6 +86,14 @@ public class Model {
 		return sum / nodes.length;
 	}
 	
+	public double getEnergyLoss() {
+		double sum = 0;
+		for (Muscle m : muscles) {
+			sum += m.getEnergyLoss();
+		}
+		return sum;
+	}
+	
 	public void update() {
 		for (Node n : nodes) {
 			n.update();
@@ -98,8 +106,8 @@ public class Model {
 			values[2 * i + 1] = nodes[i].y - this.getY();
 		}
 		double[] newValues = network.forward(values);
-		for (int i = 0; i < sticks.length; i ++) {
-			sticks[i].update(newValues[i]);
+		for (int i = 0; i < muscles.length; i ++) {
+			muscles[i].update(newValues[i]);
 		}
 		
 		for (Node n : nodes) {
@@ -108,7 +116,7 @@ public class Model {
 	}
 	
 	public void render(Graphics g) {
-		for (Stick s : sticks) {
+		for (Muscle s : muscles) {
 			s.render(g);
 		}
 		for (Node n : nodes) {

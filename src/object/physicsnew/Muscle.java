@@ -3,21 +3,24 @@ package object.physicsnew;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Stick {
+public class Muscle {
 
 	public Node n1;
 	public Node n2;
 	
 	public double length;
-	private double thickness;
 	public double scale;
+	
+	private double thickness;
+	
+	private double oldLength;
 	
 	private final double MAX_SCALE;
 	private final double MIN_SCALE;
 	
 	private static Color color = new Color(243, 160, 160);
 	
-	public Stick (Node n1, Node n2, double thickness) {
+	public Muscle (Node n1, Node n2, double thickness) {
 		this.n1 = n1;
 		this.n2 = n2;
 		
@@ -40,7 +43,13 @@ public class Stick {
 		return length - getDistance();
 	}
 	
+	public double getEnergyLoss() {
+		return Math.abs(oldLength - getDistance()) / 100.0;
+	}
+	
 	public void update() {
+		oldLength = getDistance();
+		
 		double dx = n2.x - n1.x;
 		double dy = n2.y - n1.y;
 		double distance = getDistance();
@@ -57,7 +66,7 @@ public class Stick {
 	}
 	
 	public void update(double scale) {
-		this.scale = scale * 1.5 + 0.5;
+		this.scale = scale * (MAX_SCALE - MIN_SCALE) + MIN_SCALE;
 		if (scale > MAX_SCALE) {
 			this.scale = MAX_SCALE;
 		}

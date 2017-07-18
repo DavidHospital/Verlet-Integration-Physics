@@ -2,38 +2,36 @@ package network.genetics;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Random;
 
-import object.physics.NetworkBody;
+import main.GameManager;
+import object.physicsnew.model.Model;
 
 public class Population {
 	
-	final long MAX_NANO_TIME = 10000000000L; // 10 seconds
-	
-	private int generation;
+	final long MAX_TIME = 10000L; // 10 seconds
 	
 	DNA[] population;
 	double[] fitness;
 	
 	// model information;
-	public NetworkBody model;
+	Model model;
 	int currentDNAIndex;
-	double currentFitness;
 	
-	private long startTime;
-	private double startX;
+	long startTime;
+	double startX;
+	double energyLoss;
 	
+	int generation;
 	int populationSize;
-	int DNASize;
 	double mutationRate;
 	
-	public Population(int populationSize, double mutationRate) {
+	GameManager gm;
+	
+	public Population(int populationSize, double mutationRate, GameManager gm) {
+		this.gm = gm;
+		
 		this.populationSize = populationSize;
 		this.mutationRate = mutationRate;
-		
-		this.model = new NetworkBody(400, 400, 50);
-		
-		DNASize = (model.network.inputSize + model.network.outputSize) * model.network.hiddenSize;
 		
 		population = new DNA[populationSize];
 		fitness = new double[populationSize];
@@ -41,83 +39,55 @@ public class Population {
 		initialPopulation();
 	}
 	
-	private void initialPopulation() {
-		for (int i = 0; i < populationSize; i ++) {
-			population[i] = DNA.Random(DNASize);
-		}
-	}
-	
-	private void newPopulation() {
-		DNA[] newPopulation = new DNA[populationSize];
-		for (int i = 0; i < populationSize; i ++) {
-			DNA parent1 = getParent();
-			DNA parent2;
-			while((parent2 = getParent()) == getParent());
-			
-			newPopulation[i] = parent1.splice(parent2, mutationRate);
-		}
-		
-		population = newPopulation;
-	}
-	
-	private double[] normalizedFitness() {
-		double[] ret = new double[populationSize];
-		double sum = 0;
-		for (int i = 0; i < populationSize; i ++) {
-			sum += fitness[i];
-		}
-		if (sum != 0)
-			for (int i = 0; i < populationSize; i ++) {
-				ret[i] = fitness[i] / sum;
-			}
-		return ret;
-	}
-	
-	private DNA getParent() {
-		double[] normalized = normalizedFitness();
-		Random r = new Random();
-		
-		double sum = 0;
-		double rand = r.nextDouble();
-		for (int i = 0; i < populationSize; i ++) {
-			sum += normalized[i];
-			if (rand <= sum) {
-				return population[i];
-			}
-		}
-		return population[0];
-		
-	}
-	
 	private void newModel() {
-		fitness[currentDNAIndex] = currentFitness;
+		fitness[currentDNAIndex] = fitness();
 		currentDNAIndex ++;
+		
 		if (currentDNAIndex >= populationSize) {
 			generation ++;
 			currentDNAIndex = 0;
 			newPopulation();
 		}
 		
-		model = new NetworkBody(400, 400, 50, population[currentDNAIndex]);
-		startX = model.getX();
+		model = Model.RandomModel(300, 200, 200, 200, gm);
 		
-		startTime = System.nanoTime();
+		for (int i = 0; i < 15; i ++) {
+			model.update();
+		}
+		
+		startX = model.getX();
+		energyLoss = 0;
+		
+		startTime = System.currentTimeMillis();
+	}
+	
+	private void initialPopulation() {
+		
+	}
+	
+	private void newPopulation() {		
+		// Sort by fitness high to low
+		// Find a better sort, maybe mergesort or quicksort
+		
+	}
+	
+	private double fitness() {
+		return model.getX() - startX / energyLoss;
 	}
 	
 	public void update() {
-		if (System.nanoTime() - startTime >= MAX_NANO_TIME) {
+		if (System.currentTimeMillis() - startTime >= MAX_TIME) {
 			newModel();
 		}
 		model.update();
-		currentFitness = model.getX() - startX;
+		energyLoss += model.getEnergyLoss();
 	}
 	
 	public void render(Graphics g) {
 		model.render(g);
 		g.setColor(Color.black);
-		g.drawString("Generation: " + generation, 10, 15);
+		g.drawString("Generation: " + generation, gm.windowWidth - 280, 15);
 		g.drawString("Creature: " + currentDNAIndex, 10, 30);
-		g.drawString("Fitness: " + currentFitness, 10, 45);
 	}
 	
 }

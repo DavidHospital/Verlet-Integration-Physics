@@ -9,8 +9,8 @@ import object.physicsnew.model.Model;
 public class GameManager {
 	
 	// window information
-	int windowWidth;
-	int windowHeight;
+	public int windowWidth;
+	public int windowHeight;
 	
 	// background drawing
 	Color background = new Color(250, 238, 224);
@@ -25,6 +25,7 @@ public class GameManager {
 	
 	Model m;
 	double startX;
+	double energyLoss;
 	
 	// Time
 	long startTime;
@@ -42,13 +43,20 @@ public class GameManager {
 	}
 	
 	private void recordModel() {
-		pastInfo.add("Creature #: " + counter + "   Distance: " + (int)((m.getX() - startX) * 100) / 100.0);
+		pastInfo.add("#: " + counter + "\t  Distance: " + (int)((m.getX() - startX) * 100) / 100.0
+				+ "  EnergyLost: " + (int)(energyLoss * 100) / 100.0);
 		counter ++;
 	}
 	
 	private void newModel() {
-		m = Model.RandomModel(300, 300, 200, 200, this);
+		m = Model.RandomModel(300, 200, 200, 200, this);
+		
+		for (int i = 0; i < 15; i ++) {
+			m.update();
+		}
+		
 		startX = m.getX();
+		energyLoss = 0;
 		
 		startTime = System.currentTimeMillis();
 	}
@@ -59,6 +67,7 @@ public class GameManager {
 			newModel();
 		}
 		m.update();
+		energyLoss += m.getEnergyLoss();
 	}
 	
 	void render(Graphics g) {
@@ -72,11 +81,11 @@ public class GameManager {
 		m.render(g);
 		
 		g.setColor(new Color(0, 0, 0, 0.1f));
-		g.fillRect(windowWidth - 250, 10, 240, windowHeight - 300);
+		g.fillRect(windowWidth - 280, 10, 270, windowHeight - 300);
 		
 		g.setColor(Color.BLACK);
 		for (int i = pastInfo.size() < 16 ? 0 : pastInfo.size() - 15; i < pastInfo.size(); i ++) {
-			g.drawString(pastInfo.get(i), windowWidth - 250 + 5, 25 + (pastInfo.size() < 16 ? i : i - (pastInfo.size() - 15)) * 20);
+			g.drawString(pastInfo.get(i), windowWidth - 280 + 5, 25 + (pastInfo.size() < 16 ? i : i - (pastInfo.size() - 15)) * 20);
 		}
 	}
 }
