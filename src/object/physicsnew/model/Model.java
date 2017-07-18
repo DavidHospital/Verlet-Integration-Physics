@@ -18,18 +18,29 @@ public class Model {
 	
 	private Network network;
 	
-	public Model(Node[] nodes, Muscle[] sticks, GameManager gm) {
+	public Model(Node[] nodes, Muscle[] muscles, GameManager gm) {
 		this.nodes = nodes;
-		this.muscles = sticks;
+		this.muscles = muscles;
 		
 		this.gm = gm;
 		
-		int[] layerSizes = {nodes.length * 2, sticks.length, sticks.length};
+		int[] layerSizes = {nodes.length * 2, muscles.length, muscles.length};
 		network = new Network(layerSizes, 30, 30, 200, 300);
-		
+	}
+	
+	public Model(Node[] nodes, Muscle[] muscles, GameManager gm, double[][][] stickValues) {
+		this(nodes, muscles, gm);
+		updateNetworkSticks(stickValues);
+	}
+	
+	public void updateNetworkSticks(double[][][] stickValues) {
+		network.updateSticks(stickValues);
+	}
+	
+	public void randomNetworkSticks() {
 		double[][][] stickValues = {
-				new double[nodes.length * 2][sticks.length],
-				new double[sticks.length][sticks.length]
+				new double[nodes.length * 2][muscles.length],
+				new double[muscles.length][muscles.length]
 		};
 		for (int i = 0; i < stickValues.length; i ++) {
 			for (int k = 0; k < stickValues[i].length; k ++) {
@@ -38,8 +49,7 @@ public class Model {
 				}
 			}
 		}
-		
-		network.updateSticks(stickValues);
+		updateNetworkSticks(stickValues);
 	}
 	
 	public static Model RandomModel(int x, int y, int width, int height, GameManager gm) {

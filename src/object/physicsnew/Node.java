@@ -11,7 +11,7 @@ public class Node {
 	public static final double bounce = 0.2f;
 	public static final double gravity = 1.0f;
 	
-	private double friction;
+	public double friction;
 	
 	// Position
 	public double x;

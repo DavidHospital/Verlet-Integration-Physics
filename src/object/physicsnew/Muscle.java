@@ -9,14 +9,16 @@ public class Muscle {
 	public Node n2;
 	
 	public double length;
-	public double scale;
-	
-	private double thickness;
-	
 	private double oldLength;
 	
-	private final double MAX_SCALE;
-	private final double MIN_SCALE;
+	public double scale;
+	
+	public double thickness;
+	
+	
+	
+	private static final double MAX_SCALE = 2.0;
+	private static final double MIN_SCALE = 0.5;
 	
 	private static Color color = new Color(243, 160, 160);
 	
@@ -28,9 +30,6 @@ public class Muscle {
 		
 		this.length = getDistance();
 		this.scale = 1.0;
-		
-		MAX_SCALE = 2.0;
-		MIN_SCALE = 0.5;
 	}
 	
 	public double getDistance() {
