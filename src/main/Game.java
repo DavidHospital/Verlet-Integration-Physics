@@ -91,16 +91,14 @@ public class Game extends JFrame implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		gm.keyPressed(e);
+		Input.KeyPressed(e);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		gm.keyReleased(e);
+		Input.KeyReleased(e);
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		gm.keyTyped(e);
-	}
+	public void keyTyped(KeyEvent e) {}
 }

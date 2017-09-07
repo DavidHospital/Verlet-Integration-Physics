@@ -32,18 +32,4 @@ public class GameManager {
 		world.render(g);
 	}
 
-	public void keyPressed(KeyEvent e) {
-		
-	}
-	
-	public void keyReleased(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_R) {
-			world.newModel();
-		}
-	}
-	
-	public void keyTyped(KeyEvent e) {
-		
-	}
-
 }

@@ -1,9 +1,11 @@
 package world;
 
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import main.GameManager;
+import main.Input;
 import object.Wall;
 import object.physics.model.Model;
 
@@ -32,6 +34,9 @@ public class World {
 	}
 	
 	public void update() {
+		if (Input.KeyDown(KeyEvent.VK_R)) {
+			newModel();
+		}
 		for (Wall w : walls) {
 			w.update();
 		}

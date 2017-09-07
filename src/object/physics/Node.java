@@ -28,15 +28,13 @@ public class Node {
 	}
 	
 	
-	public void update() {
-		
+	public void update() {		
 		// Movement of node each frame
 		Vector2 vel = pos.sub(oldPos);
 		oldPos = pos.copy();
 		pos = pos.add(vel);
 		
 		pos = pos.add(gravity);
-		
 	}
 	
 	
@@ -61,7 +59,6 @@ public class Node {
 				pos = pos.sub(translate.add(line.proj(velocity).mult(friction)));
 				Vector2 newVelocity = velocity.proj(pos.sub(oldPos));
 				oldPos = oldPos.add(translate.proj(newVelocity).mult(1 + bounce));
-				
 			}			
 		}		
 	}
