@@ -15,11 +15,15 @@ public class Model {
 	
 	private World world;
 	
+	private boolean contract;
+	
 	public Model(Node[] nodes, Muscle[] muscles, World world) {
 		this.nodes = nodes;
 		this.muscles = muscles;
 		
 		this.world = world;
+		
+		contract = false;
 	}
 	
 	public static Model RandomModel(int x, int y, int width, int height, int numNodes, World world) {
@@ -38,7 +42,7 @@ public class Model {
 			for (int k = i + 1; k < nodesList.size(); k ++) {
 				if (i != k) {
 					if (r.nextDouble() < stickChance) {
-						sticksList.add(new Muscle(nodesList.get(i), nodesList.get(k), r.nextDouble()));
+						sticksList.add(new Muscle(nodesList.get(i), nodesList.get(k), r.nextDouble(), 0.5));
 						stickChance *= 0.75;
 					}
 				}
@@ -67,12 +71,22 @@ public class Model {
 	}
 	
 	public void update() {
+		if (contract) {
+			for (Muscle m : muscles) {
+				m.contract();
+			}
+		} else {
+			for (Muscle m : muscles) {
+				m.relax();
+			}
+		}
+		
 		for (Node n : nodes) {
-			n.update();
+			n.update(world);
 		}
 
 		for (Muscle m : muscles) {
-			m.update();
+			m.update(world);
 		}
 		
 		for (Node n : nodes) {
@@ -88,5 +102,13 @@ public class Model {
 			n.render(g);
 		}
 		
+	}
+
+	public void contractMuscles() {
+		contract = true;
+	}
+	
+	public void relaxMuscles() {
+		contract = false;
 	}
 }

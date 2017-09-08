@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import main.GameManager;
-import main.Input;
 import object.Wall;
 import object.physics.model.Model;
 
@@ -30,23 +29,35 @@ public class World {
 	}
 	
 	public void newModel() {
-		model = Model.RandomModel(200, 300, 200, 200, 4, this);
+		model = Model.RandomModel(200, 300, 200, 200, 2, this);
 	}
 	
 	public void update() {
-		if (Input.KeyDown(KeyEvent.VK_R)) {
-			newModel();
-		}
 		for (Wall w : walls) {
 			w.update();
 		}
 		model.update();
 	}
 	
-	public void render(Graphics g) {
+	public void render(Graphics g) {		
 		for (Wall w : walls) {
 			w.render(g);
 		}
 		model.render(g);
+	}
+
+	public void keyPressedEvent(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_C) {
+			model.contractMuscles();
+		}
+	}
+
+	public void keyReleasedEvent(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_R) {
+			newModel();
+		}
+		if (e.getKeyCode() == KeyEvent.VK_C) {
+			model.relaxMuscles();
+		}
 	}
 }

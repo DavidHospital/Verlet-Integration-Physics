@@ -2,6 +2,8 @@ package tools;
 
 public class Vector2 {
 
+	public static final Vector2 Zero = new Vector2(0, 0);
+	
 	public double x;
 	public double y;
 	
@@ -38,11 +40,20 @@ public class Vector2 {
 		return this.x * other.x + this.y * other.y;
 	}
 	
+	public double cross (Vector2 other) {
+		return this.x * other.y - this.y * other.x;
+	}
+	
 	public Vector2 mult (double k) {
 		return new Vector2 (x * k, y * k);
 	}
 	
 	public Vector2 proj (Vector2 other) {
 		return this.mult( this.dot(other) / this.dot(this) ); 
+	}
+	
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
 	}
 }

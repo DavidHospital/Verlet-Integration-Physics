@@ -28,7 +28,7 @@ public class Node {
 	}
 	
 	
-	public void update() {		
+	public void update(World world) {
 		// Movement of node each frame
 		Vector2 vel = pos.sub(oldPos);
 		oldPos = pos.copy();
@@ -37,10 +37,14 @@ public class Node {
 		pos = pos.add(gravity);
 	}
 	
+	public void move(Vector2 vel) {
+		pos = pos.add(vel);
+	}
 	
 	/** Call at the end of the frame
 	 */
-	public void checkCollisions(World world) {
+	public boolean checkCollisions(World world) {
+		boolean ret = false;
 		for (Wall w : world.walls) {
 			
 			Vector2 line = w.p2.sub(w.p1);
@@ -52,6 +56,7 @@ public class Node {
 					&& proj.dot(line) >= 0 
 					&& proj.dot(line) <= line.dot(line)) {
 				w.collided = true;
+				ret = true;
 				
 				Vector2 velocity = pos.sub(oldPos);
 				Vector2 translate = distance.normalize().mult(RADIUS).sub(distance);
@@ -60,7 +65,25 @@ public class Node {
 				Vector2 newVelocity = velocity.proj(pos.sub(oldPos));
 				oldPos = oldPos.add(translate.proj(newVelocity).mult(1 + bounce));
 			}			
-		}		
+		}
+		return ret;
+	}
+	
+	public boolean isColliding(World world) {
+		for (Wall w : world.walls) {
+			
+			Vector2 line = w.p2.sub(w.p1);
+			Vector2 p1Node = pos.sub(w.p1);
+			Vector2 proj = line.proj(p1Node);
+			Vector2 distance = proj.add(w.p1).sub(pos);
+			
+			if (distance.magnitude() <= RADIUS 
+					&& proj.dot(line) >= 0 
+					&& proj.dot(line) <= line.dot(line)) {
+				return true;
+			}			
+		}
+		return false;
 	}
 	
 	public void render(Graphics g) {

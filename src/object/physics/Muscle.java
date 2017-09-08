@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import tools.Vector2;
+import world.World;
 
 public class Muscle {
 
@@ -11,18 +12,30 @@ public class Muscle {
 	public Node n2;
 	
 	public double length;
-	
 	public double thickness;
+	
+	public double contractScale;
+	public boolean contract;
 	
 	private static Color color = new Color(243, 160, 160);
 	
-	public Muscle (Node n1, Node n2, double thickness) {
+	public Muscle (Node n1, Node n2, double thickness, double contractScale) {
 		this.n1 = n1;
 		this.n2 = n2;
 		
 		this.thickness = thickness;
-		
 		this.length = getDistance();
+		
+		this.contractScale = contractScale;
+		contract = false;
+	}
+	
+	public void contract() {
+		contract = true;
+	}
+	
+	public void relax() {
+		contract = false;
 	}
 	
 	public double getDistance() {
@@ -33,16 +46,24 @@ public class Muscle {
 		return length - getDistance();
 	}
 	
-	public void update() {		
+	public void update(World world) {		
 		Vector2 line = n2.pos.sub(n1.pos);
 		double distance = getDistance();
+		if (distance <= 0) {
+			distance = 0.1;
+		}
 
-		double difference = length - distance;
-		double percent = difference / distance / 2;
+		double difference = length * (contract ? contractScale : 1.0) - distance;
+		double percent = difference / (distance * 2);
+		
 		Vector2 offset = line.mult(percent * thickness);
 		
-		n1.pos = n1.pos.sub(offset);
-		n2.pos = n2.pos.add(offset);
+		// This is broken.
+		// Nodes can clip through walls
+		
+
+		n1.move(offset.mult(-1));
+		n2.move(offset);
 	}
 	
 	public void render(Graphics g) {

@@ -32,4 +32,12 @@ public class GameManager {
 		world.render(g);
 	}
 
+	public void keyPressedEvent(KeyEvent e) {
+		world.keyPressedEvent(e);
+	}
+
+	public void keyReleasedEvent(KeyEvent e) {
+		world.keyReleasedEvent(e);
+	}
+
 }
