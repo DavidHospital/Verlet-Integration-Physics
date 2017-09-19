@@ -55,11 +55,13 @@ public class Wall {
 		yPoints[2] = (int)(y2 + Math.cos(a) * THICKNESS);
 		yPoints[3] = (int)(y2 - Math.cos(a) * THICKNESS);
 		
-		if (collided) {
-			g.setColor(ALT_COLOR);
-		} else {
-			g.setColor(COLOR); 
-		}
+//		if (collided) {
+//			g.setColor(ALT_COLOR);
+//		} else {
+//			g.setColor(COLOR); 
+//		}
+		
+		g.setColor(COLOR);
 		g.fillPolygon(xPoints, yPoints, 4);
 	}
 }

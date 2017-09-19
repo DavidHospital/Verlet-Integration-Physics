@@ -29,7 +29,7 @@ public class World {
 	}
 	
 	public void newModel() {
-		model = Model.RandomModel(200, 300, 200, 200, 2, this);
+		model = Model.RandomModel(200, 300, 200, 200, 4, this);
 	}
 	
 	public void update() {

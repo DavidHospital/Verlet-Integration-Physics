@@ -32,7 +32,7 @@ public class Model {
 		// Nodes
 		ArrayList<Node> nodesList = new ArrayList<Node>();
 		for (int i = 0; i < numNodes; i ++) {
-			nodesList.add(new Node(r.nextInt(width) + x - width / 2, r.nextInt(height) + y - height / 2, r.nextDouble()));
+			nodesList.add(new Node(world, r.nextInt(width) + x - width / 2, r.nextInt(height) + y - height / 2, r.nextDouble()));
 		}
 		
 		// Sticks
@@ -42,7 +42,7 @@ public class Model {
 			for (int k = i + 1; k < nodesList.size(); k ++) {
 				if (i != k) {
 					if (r.nextDouble() < stickChance) {
-						sticksList.add(new Muscle(nodesList.get(i), nodesList.get(k), r.nextDouble(), 0.5));
+						sticksList.add(new Muscle(nodesList.get(i), nodesList.get(k), r.nextDouble(), r.nextDouble()));
 						stickChance *= 0.75;
 					}
 				}
@@ -89,9 +89,9 @@ public class Model {
 			m.update(world);
 		}
 		
-		for (Node n : nodes) {
-			n.checkCollisions(world);
-		}
+//		for (Node n : nodes) {
+//			n.checkCollisions();
+//		}
 	}
 	
 	public void render(Graphics g) {
