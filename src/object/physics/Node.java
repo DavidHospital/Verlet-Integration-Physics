@@ -9,41 +9,63 @@ import world.World;
 
 public class Node {
 
-	public static final double RADIUS = 10;
-	public static final double bounce = 0.9f;
+	public static final double RADIUS = 20;
+	public static final double bounce = 0.2f;
 	public static final Vector2 gravity = new Vector2(0, 0.2f);
 	
 	public double friction;
+	
+	private World world;
 	
 	// Position	
 	public Vector2 pos;
 	public Vector2 oldPos;
 	
 	
-	public Node(double x, double y, double friction) {
+	public Node(World world, double x, double y, double friction) {
 		this.pos = new Vector2(x, y);
 		this.oldPos = pos.copy();
 		
 		this.friction = friction;
+		this.world = world;
 	}
 	
 	
 	public void update(World world) {
 		// Movement of node each frame
-		Vector2 vel = pos.sub(oldPos);
-		oldPos = pos.copy();
-		pos = pos.add(vel);
-		
-		pos = pos.add(gravity);
+		frameMove();
 	}
 	
 	public void move(Vector2 vel) {
-		pos = pos.add(vel);
+		double length = vel.magnitude();
+		Vector2 nVel = vel.normalize().mult(RADIUS/4);
+		if (length > RADIUS/4) {
+			while (length >= 0) {
+				pos = pos.add(nVel);
+				length -= RADIUS/4;
+				if (checkCollisions()) {
+					break;
+				}
+			}
+			if (length < 0) {
+				Vector2 back = vel.normalize().mult(length);
+				pos = pos.add(back);
+			}
+		} else {
+			pos = pos.add(vel);
+		}
 	}
 	
-	/** Call at the end of the frame
-	 */
-	public boolean checkCollisions(World world) {
+	public void frameMove() {
+		Vector2 vel = pos.sub(oldPos);
+		oldPos = pos.copy();
+		move(vel);
+
+		move(gravity);
+		checkCollisions();
+	}
+	
+	public boolean checkCollisions() {
 		boolean ret = false;
 		for (Wall w : world.walls) {
 			
@@ -52,16 +74,21 @@ public class Node {
 			Vector2 proj = line.proj(p1Node);
 			Vector2 distance = proj.add(w.p1).sub(pos);
 			
-			if (distance.magnitude() <= RADIUS 
+			if (distance.magnitude() < RADIUS 
 					&& proj.dot(line) >= 0 
 					&& proj.dot(line) <= line.dot(line)) {
 				w.collided = true;
+				
+				// Have collided
 				ret = true;
 				
 				Vector2 velocity = pos.sub(oldPos);
 				Vector2 translate = distance.normalize().mult(RADIUS).sub(distance);
 				
-				pos = pos.sub(translate.add(line.proj(velocity).mult(friction)));
+				Vector2 moveAmount = translate.add(line.proj(velocity).mult(friction)).mult(-1);
+				
+				move(moveAmount);
+				
 				Vector2 newVelocity = velocity.proj(pos.sub(oldPos));
 				oldPos = oldPos.add(translate.proj(newVelocity).mult(1 + bounce));
 			}			
@@ -69,20 +96,26 @@ public class Node {
 		return ret;
 	}
 	
-	public boolean isColliding(World world) {
+	public boolean isColliding() {
 		for (Wall w : world.walls) {
-			
-			Vector2 line = w.p2.sub(w.p1);
-			Vector2 p1Node = pos.sub(w.p1);
-			Vector2 proj = line.proj(p1Node);
-			Vector2 distance = proj.add(w.p1).sub(pos);
-			
-			if (distance.magnitude() <= RADIUS 
-					&& proj.dot(line) >= 0 
-					&& proj.dot(line) <= line.dot(line)) {
+			if (isColliding(w)) {
 				return true;
-			}			
+			}
 		}
+		return false;
+	}
+	
+	public boolean isColliding(Wall w) {
+		Vector2 line = w.p2.sub(w.p1);
+		Vector2 p1Node = pos.sub(w.p1);
+		Vector2 proj = line.proj(p1Node);
+		Vector2 distance = proj.add(w.p1).sub(pos);
+		
+		if (distance.magnitude() <= RADIUS 
+				&& proj.dot(line) >= 0 
+				&& proj.dot(line) <= line.dot(line)) {
+			return true;
+		}		
 		return false;
 	}
 	
