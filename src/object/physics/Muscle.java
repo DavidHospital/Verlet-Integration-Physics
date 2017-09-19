@@ -15,9 +15,10 @@ public class Muscle {
 	public double thickness;
 	
 	public double contractScale;
+	public double currentScale;
 	public boolean contract;
 	
-	private static Color color = new Color(243, 160, 160);
+	//private static Color color = new Color(243, 160, 160);
 	
 	public Muscle (Node n1, Node n2, double thickness, double contractScale) {
 		this.n1 = n1;
@@ -27,6 +28,8 @@ public class Muscle {
 		this.length = getDistance();
 		
 		this.contractScale = contractScale;
+		
+		currentScale = 1.0f;
 		contract = false;
 	}
 	
@@ -47,13 +50,26 @@ public class Muscle {
 	}
 	
 	public void update(World world) {		
+		if (contract) {
+			currentScale -= thickness;
+			if (currentScale < contractScale) {
+				currentScale = contractScale;
+			}
+		} else {
+			currentScale += thickness;
+			if (currentScale > 1.0f) {
+				currentScale = 1.0f;
+			}
+		}
+		
+		
 		Vector2 line = n2.pos.sub(n1.pos);
 		double distance = getDistance();
 		if (distance <= 0) {
 			distance = 0.1;
 		}
 
-		double difference = length * (contract ? contractScale : 1.0) - distance;
+		double difference = length * currentScale - distance;
 		double percent = difference / (distance * 2);
 		
 		Vector2 offset = line.mult(percent * thickness);
@@ -85,7 +101,8 @@ public class Muscle {
 		yPoints[2] = (int)(y2 + Math.cos(a) * Node.RADIUS * thickness);
 		yPoints[3] = (int)(y2 - Math.cos(a) * Node.RADIUS * thickness);
 		
-		g.setColor(color);
+		
+		g.setColor(Color.getHSBColor(0.2f, 1.0f, 1.0f - (float)contractScale));
 		g.fillPolygon(xPoints, yPoints, 4);
 	}
 }
