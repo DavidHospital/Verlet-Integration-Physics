@@ -4,11 +4,12 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
+import object.GameObject;
 import object.physics.Muscle;
 import object.physics.Node;
 import world.World;
 
-public class Model {
+public class Model extends GameObject {
 	
 	public Node[] nodes;
 	public Muscle[] muscles;
@@ -70,6 +71,7 @@ public class Model {
 		return sum / nodes.length;
 	}
 	
+	@Override
 	public void update() {
 		if (contract) {
 			for (Muscle m : muscles) {
@@ -89,11 +91,9 @@ public class Model {
 			m.update(world);
 		}
 		
-//		for (Node n : nodes) {
-//			n.checkCollisions();
-//		}
 	}
 	
+	@Override
 	public void render(Graphics g) {
 		for (Muscle s : muscles) {
 			s.render(g);

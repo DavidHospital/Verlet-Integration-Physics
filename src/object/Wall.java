@@ -5,22 +5,17 @@ import java.awt.Graphics;
 
 import tools.Vector2;
 
-public class Wall {
+public class Wall extends GameObject {
 
 	public static final double THICKNESS = 3.0;
 	public static final Color COLOR = Color.BLACK;
-	public static final Color ALT_COLOR = Color.RED;
 	
 	public Vector2 p1;
 	public Vector2 p2;
 	
-	public boolean collided;
-	
 	public Wall (Vector2 p1, Vector2 p2) {
 		this.p1 = p1;
 		this.p2 = p2;
-		
-		collided = false;
 	}
 	
 	public Wall (double x1, double y1, double x2, double y2) {
@@ -32,10 +27,11 @@ public class Wall {
 		return p2.sub(p2).magnitude();
 	}
 	
+	@Override
 	public void update() {
-		collided = false;
 	}
 	
+	@Override
 	public void render(Graphics g) {
 		double x1 = p1.x;
 		double y1 = p1.y;
@@ -54,12 +50,6 @@ public class Wall {
 		yPoints[1] = (int)(y1 + Math.cos(a) * THICKNESS);
 		yPoints[2] = (int)(y2 + Math.cos(a) * THICKNESS);
 		yPoints[3] = (int)(y2 - Math.cos(a) * THICKNESS);
-		
-//		if (collided) {
-//			g.setColor(ALT_COLOR);
-//		} else {
-//			g.setColor(COLOR); 
-//		}
 		
 		g.setColor(COLOR);
 		g.fillPolygon(xPoints, yPoints, 4);

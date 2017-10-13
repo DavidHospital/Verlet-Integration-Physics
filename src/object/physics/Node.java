@@ -67,7 +67,7 @@ public class Node {
 	
 	public boolean checkCollisions() {
 		boolean ret = false;
-		for (Wall w : world.walls) {
+		for (Wall w : world.getWalls()) {
 			
 			Vector2 line = w.p2.sub(w.p1);
 			Vector2 p1Node = pos.sub(w.p1);
@@ -77,7 +77,6 @@ public class Node {
 			if (distance.magnitude() < RADIUS 
 					&& proj.dot(line) >= 0 
 					&& proj.dot(line) <= line.dot(line)) {
-				w.collided = true;
 				
 				// Have collided
 				ret = true;
@@ -97,7 +96,7 @@ public class Node {
 	}
 	
 	public boolean isColliding() {
-		for (Wall w : world.walls) {
+		for (Wall w : world.getWalls()) {
 			if (isColliding(w)) {
 				return true;
 			}
