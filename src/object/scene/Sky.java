@@ -2,24 +2,25 @@ package object.scene;
 
 import java.awt.Graphics;
 
-import object.GameObject;
+public class Sky extends SceneObject {
 
-public class Background extends GameObject {
-	
-	public Background() {
-		
+	protected Sky(Camera c) {
+		super(c);
+		// TODO Auto-generated constructor stub
 	}
 	
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void render(Graphics g) {
+	public void renderC(Graphics g) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
+	
 
 }
