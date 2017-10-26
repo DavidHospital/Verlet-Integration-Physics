@@ -3,9 +3,12 @@ package object;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import object.scene.Camera;
+import object.scene.Scene;
+import object.scene.SceneObject;
 import tools.Vector2;
 
-public class Wall extends GameObject {
+public class Wall extends SceneObject {
 
 	public static final double THICKNESS = 3.0;
 	public static final Color COLOR = Color.BLACK;
@@ -13,12 +16,14 @@ public class Wall extends GameObject {
 	public Vector2 p1;
 	public Vector2 p2;
 	
-	public Wall (Vector2 p1, Vector2 p2) {
+	public Wall (Scene scene, Camera camera, Vector2 p1, Vector2 p2) {
+		super(scene, camera);
 		this.p1 = p1;
 		this.p2 = p2;
 	}
 	
-	public Wall (double x1, double y1, double x2, double y2) {
+	public Wall (Scene scene, Camera camera, double x1, double y1, double x2, double y2) {
+		super(scene, camera);
 		this.p1 = new Vector2(x1, y1);
 		this.p2 = new Vector2(x2, y2);
 	}
@@ -30,9 +35,9 @@ public class Wall extends GameObject {
 	@Override
 	public void update() {
 	}
-	
+
 	@Override
-	public void render(Graphics g) {
+	public void renderC(Graphics g) {
 		double x1 = p1.x;
 		double y1 = p1.y;
 		double x2 = p2.x;

@@ -6,17 +6,18 @@ import object.GameObject;
 
 public abstract class SceneObject extends GameObject {
 	
-	Camera c;
+	Scene scene;
+	Camera camera;
 	
-	protected SceneObject (Camera c) {
-		this.c = c;
+	protected SceneObject (Scene scene, Camera camera) {
+		this.camera = camera;
 	}
 	
 	public abstract void renderC(Graphics g);
 	
 	public void render(Graphics g) {
-		g.translate((int)c.position.x, (int)c.position.y);
+		g.translate((int)camera.position.x, (int)camera.position.y);
 		renderC(g);
-		g.translate((int)-c.position.x, (int)-c.position.y);
+		g.translate((int)-camera.position.x, (int)-camera.position.y);
 	}
 }

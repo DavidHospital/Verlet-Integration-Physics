@@ -3,8 +3,8 @@ package object.physics;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import object.scene.Scene;
 import tools.Vector2;
-import world.World;
 
 public class Muscle {
 
@@ -49,7 +49,7 @@ public class Muscle {
 		return length - getDistance();
 	}
 	
-	public void update(World world) {		
+	public void update(Scene world) {		
 		if (contract) {
 			currentScale -= thickness;
 			if (currentScale < contractScale) {

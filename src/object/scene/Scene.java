@@ -1,28 +1,63 @@
-package world;
+package object.scene;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 import main.GameManager;
-import object.scene.Scene;
+import tools.Vector2;
 
-public class World {
+public class Scene {
 
-	// Test commit
 	GameManager gm;
-	Scene scene;
+	Camera camera;
 	
-	public World (GameManager gm) {
+	public ArrayList<SceneObject> sceneObjects;
+	public ArrayList<SceneObject> addQueue;
+	public ArrayList<SceneObject> removeQueue;
+	
+	public Scene(GameManager gm) {
 		this.gm = gm;
-		this.scene = new Scene(gm.windowWidth, gm.windowWidth);
+		this.camera = new Camera(new Vector2(0, 0), 			// Position
+				new Vector2(gm.windowWidth, gm.windowHeight), // Size
+				Vector2.Zero);							// Focus (Later change to model position)
+	
+		this.sceneObjects = new ArrayList<>();
+		this.addQueue = new ArrayList<>();
+		this.removeQueue = new ArrayList<>();
+		
+		initiate();
+	}
+	
+	private void initiate() {
+		addSceneObject(new Background(this, camera));
+		addSceneObject(new Ground(this, camera, 100));
+	}
+	
+	public void addSceneObject(SceneObject o) {
+		addQueue.add(o);
+	}
+	
+	public void removeSceneObject(SceneObject o) {
+		removeQueue.add(o);
 	}
 	
 	public void update() {
-		scene.update();
+		sceneObjects.addAll(addQueue);
+		addQueue.clear();
+		
+		sceneObjects.removeAll(removeQueue);
+		removeQueue.clear();
+		
+		for (SceneObject o : sceneObjects) {
+			o.update();
+		}
 	}
 	
-	public void render(Graphics g) {		
-		scene.render(g);
+	public void render(Graphics g) {
+		for (SceneObject o : sceneObjects) {
+			o.render(g);
+		}
 	}
 
 	public void keyPressedEvent(KeyEvent e) {	

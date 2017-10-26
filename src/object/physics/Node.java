@@ -4,8 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import object.Wall;
+import object.scene.Scene;
+import object.scene.SceneObject;
 import tools.Vector2;
-import world.World;
 
 public class Node {
 
@@ -15,23 +16,23 @@ public class Node {
 	
 	public double friction;
 	
-	private World world;
+	private Scene scene;
 	
 	// Position	
 	public Vector2 pos;
 	public Vector2 oldPos;
 	
 	
-	public Node(World world, double x, double y, double friction) {
+	public Node(Scene scene, double x, double y, double friction) {
 		this.pos = new Vector2(x, y);
 		this.oldPos = pos.copy();
 		
 		this.friction = friction;
-		this.world = world;
+		this.scene = scene;
 	}
 	
 	
-	public void update(World world) {
+	public void update(Scene scene) {
 		// Movement of node each frame
 		frameMove();
 	}
@@ -67,41 +68,35 @@ public class Node {
 	
 	public boolean checkCollisions() {
 		boolean ret = false;
-		for (Wall w : world.getWalls()) {
-			
-			Vector2 line = w.p2.sub(w.p1);
-			Vector2 p1Node = pos.sub(w.p1);
-			Vector2 proj = line.proj(p1Node);
-			Vector2 distance = proj.add(w.p1).sub(pos);
-			
-			if (distance.magnitude() < RADIUS 
-					&& proj.dot(line) >= 0 
-					&& proj.dot(line) <= line.dot(line)) {
+		for (SceneObject o : scene.sceneObjects) {
+			if (o instanceof Wall) {
+				Wall w = (Wall) o;
 				
-				// Have collided
-				ret = true;
+				Vector2 line = w.p2.sub(w.p1);
+				Vector2 p1Node = pos.sub(w.p1);
+				Vector2 proj = line.proj(p1Node);
+				Vector2 distance = proj.add(w.p1).sub(pos);
 				
-				Vector2 velocity = pos.sub(oldPos);
-				Vector2 translate = distance.normalize().mult(RADIUS).sub(distance);
-				
-				Vector2 moveAmount = translate.add(line.proj(velocity).mult(friction)).mult(-1);
-				
-				move(moveAmount);
-				
-				Vector2 newVelocity = velocity.proj(pos.sub(oldPos));
-				oldPos = oldPos.add(translate.proj(newVelocity).mult(1 + bounce));
-			}			
-		}
-		return ret;
-	}
-	
-	public boolean isColliding() {
-		for (Wall w : world.getWalls()) {
-			if (isColliding(w)) {
-				return true;
+				if (distance.magnitude() < RADIUS 
+						&& proj.dot(line) >= 0 
+						&& proj.dot(line) <= line.dot(line)) {
+					
+					// Have collided
+					ret = true;
+					
+					Vector2 velocity = pos.sub(oldPos);
+					Vector2 translate = distance.normalize().mult(RADIUS).sub(distance);
+					
+					Vector2 moveAmount = translate.add(line.proj(velocity).mult(friction)).mult(-1);
+					
+					move(moveAmount);
+					
+					Vector2 newVelocity = velocity.proj(pos.sub(oldPos));
+					oldPos = oldPos.add(translate.proj(newVelocity).mult(1 + bounce));
+				}
 			}
 		}
-		return false;
+		return ret;
 	}
 	
 	public boolean isColliding(Wall w) {

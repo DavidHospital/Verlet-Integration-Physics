@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
-import world.World;
+import object.scene.Scene;
 
 public class GameManager {
 	
@@ -12,32 +12,32 @@ public class GameManager {
 	public int windowWidth;
 	public int windowHeight;
 	
-	private World world;
+	private Scene scene;
 	
 	public GameManager(int windowWidth, int windowHeight) {
 		this.windowWidth = windowWidth;
 		this.windowHeight = windowHeight;
 		
-		this.world = new World(this);
+		this.scene = new Scene(this);
 	}
 	
 	void update() {
-		world.update();
+		scene.update();
 	}
 	
 	void render(Graphics g) {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, windowWidth, windowHeight);
 		
-		world.render(g);
+		scene.render(g);
 	}
 
 	public void keyPressedEvent(KeyEvent e) {
-		world.keyPressedEvent(e);
+		scene.keyPressedEvent(e);
 	}
 
 	public void keyReleasedEvent(KeyEvent e) {
-		world.keyReleasedEvent(e);
+		scene.keyReleasedEvent(e);
 	}
 
 }

@@ -7,18 +7,18 @@ import java.util.Random;
 import object.GameObject;
 import object.physics.Muscle;
 import object.physics.Node;
-import world.World;
+import object.scene.Scene;
 
 public class Model extends GameObject {
 	
 	public Node[] nodes;
 	public Muscle[] muscles;
 	
-	private World world;
+	private Scene world;
 	
 	private boolean contract;
 	
-	public Model(Node[] nodes, Muscle[] muscles, World world) {
+	public Model(Node[] nodes, Muscle[] muscles, Scene world) {
 		this.nodes = nodes;
 		this.muscles = muscles;
 		
@@ -27,7 +27,7 @@ public class Model extends GameObject {
 		contract = false;
 	}
 	
-	public static Model RandomModel(int x, int y, int width, int height, int numNodes, World world) {
+	public static Model RandomModel(int x, int y, int width, int height, int numNodes, Scene world) {
 		Random r = new Random();
 		
 		// Nodes
