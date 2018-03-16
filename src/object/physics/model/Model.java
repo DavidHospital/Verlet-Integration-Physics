@@ -4,12 +4,12 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
-import object.GameObject;
 import object.physics.Muscle;
 import object.physics.Node;
 import object.scene.Scene;
+import object.scene.SceneObject;
 
-public class Model extends GameObject {
+public class Model extends SceneObject {
 	
 	public Node[] nodes;
 	public Muscle[] muscles;
@@ -18,11 +18,10 @@ public class Model extends GameObject {
 	
 	private boolean contract;
 	
-	public Model(Node[] nodes, Muscle[] muscles, Scene world) {
+	public Model(Node[] nodes, Muscle[] muscles, Scene scene) {
+		super(scene);
 		this.nodes = nodes;
 		this.muscles = muscles;
-		
-		this.world = world;
 		
 		contract = false;
 	}
@@ -93,8 +92,16 @@ public class Model extends GameObject {
 		
 	}
 	
+	public void contractMuscles() {
+		contract = true;
+	}
+	
+	public void relaxMuscles() {
+		contract = false;
+	}
+
 	@Override
-	public void render(Graphics g) {
+	public void renderC(Graphics g) {
 		for (Muscle s : muscles) {
 			s.render(g);
 		}
@@ -102,13 +109,5 @@ public class Model extends GameObject {
 			n.render(g);
 		}
 		
-	}
-
-	public void contractMuscles() {
-		contract = true;
-	}
-	
-	public void relaxMuscles() {
-		contract = false;
 	}
 }

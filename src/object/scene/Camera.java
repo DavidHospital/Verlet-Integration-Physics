@@ -16,9 +16,11 @@ public class Camera {
 	
 	public void update() {
 		position = focus.sub(size.mult(0.5));
+		System.out.println(this.position);
 	}
 	
 	public void setFocus(Vector2 focus) {
 		this.focus = focus;
+		update();
 	}
 }

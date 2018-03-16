@@ -3,7 +3,6 @@ package object;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import object.scene.Camera;
 import object.scene.Scene;
 import object.scene.SceneObject;
 import tools.Vector2;
@@ -16,14 +15,14 @@ public class Wall extends SceneObject {
 	public Vector2 p1;
 	public Vector2 p2;
 	
-	public Wall (Scene scene, Camera camera, Vector2 p1, Vector2 p2) {
-		super(scene, camera);
+	public Wall (Scene scene, Vector2 p1, Vector2 p2) {
+		super(scene);
 		this.p1 = p1;
 		this.p2 = p2;
 	}
 	
-	public Wall (Scene scene, Camera camera, double x1, double y1, double x2, double y2) {
-		super(scene, camera);
+	public Wall (Scene scene, double x1, double y1, double x2, double y2) {
+		super(scene);
 		this.p1 = new Vector2(x1, y1);
 		this.p2 = new Vector2(x2, y2);
 	}
