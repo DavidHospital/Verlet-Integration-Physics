@@ -14,37 +14,39 @@ public class Node {
 	public static final double bounce = 0.2f;
 	public static final Vector2 gravity = new Vector2(0, 0.2f);
 	
-	public double friction;
 	
-	private Scene scene;
-	
-	// Position	
 	public Vector2 pos;
 	public Vector2 oldPos;
+	public double friction;
 	
 	
-	public Node(Scene scene, double x, double y, double friction) {
+	public Node(double x, double y, double friction) {
 		this.pos = new Vector2(x, y);
 		this.oldPos = pos.copy();
 		
 		this.friction = friction;
-		this.scene = scene;
+	}
+	
+	public Node(Vector2 pos, Vector2 oldPos, double friction) {
+		this.pos = pos;
+		this.oldPos = oldPos;
+		this.friction = friction;
 	}
 	
 	
 	public void update(Scene scene) {
 		// Movement of node each frame
-		frameMove();
+		frameMove(scene);
 	}
 	
-	public void move(Vector2 vel) {
+	public void move(Scene scene, Vector2 vel) {
 		double length = vel.magnitude();
 		Vector2 nVel = vel.normalize().mult(RADIUS/4);
 		if (length > RADIUS/4) {
 			while (length >= 0) {
 				pos = pos.add(nVel);
 				length -= RADIUS/4;
-				if (checkCollisions()) {
+				if (checkCollisions(scene)) {
 					break;
 				}
 			}
@@ -57,16 +59,16 @@ public class Node {
 		}
 	}
 	
-	public void frameMove() {
+	public void frameMove(Scene scene) {
 		Vector2 vel = pos.sub(oldPos);
 		oldPos = pos.copy();
-		move(vel);
+		move(scene, vel);
 
-		move(gravity);
-		checkCollisions();
+		move(scene, gravity);
+		checkCollisions(scene);
 	}
 	
-	public boolean checkCollisions() {
+	public boolean checkCollisions(Scene scene) {
 		boolean ret = false;
 		for (SceneObject o : scene.sceneObjects) {
 			if (o instanceof Wall) {
@@ -89,7 +91,7 @@ public class Node {
 					
 					Vector2 moveAmount = translate.add(line.proj(velocity).mult(friction)).mult(-1);
 					
-					move(moveAmount);
+					move(scene, moveAmount);
 					
 					Vector2 newVelocity = velocity.proj(pos.sub(oldPos));
 					oldPos = oldPos.add(translate.proj(newVelocity).mult(1 + bounce));
@@ -116,5 +118,15 @@ public class Node {
 	public void render(Graphics g) {
 		g.setColor(Color.getHSBColor(0.0f, 1.0f, 1.0f - (float)friction));
 		g.fillOval((int)(pos.x - RADIUS), (int)(pos.y - RADIUS), (int)(2 * RADIUS), (int)(2 * RADIUS));
+	}
+	
+	public void setPos(Vector2 pos) {
+		this.pos = pos;
+		this.oldPos = pos;
+	}
+	
+	@Override
+	public Node clone() {
+		return new Node(pos, oldPos, friction);
 	}
 }

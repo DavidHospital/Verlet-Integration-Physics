@@ -49,7 +49,7 @@ public class Muscle {
 		return length - getDistance();
 	}
 	
-	public void update(Scene world) {		
+	public void update(Scene scene) {		
 		if (contract) {
 			currentScale -= thickness;
 			if (currentScale < contractScale) {
@@ -78,8 +78,8 @@ public class Muscle {
 		// Nodes can clip through walls
 		
 
-		n1.move(offset.mult(-1));
-		n2.move(offset);
+		n1.move(scene, offset.mult(-1));
+		n2.move(scene, offset);
 	}
 	
 	public void render(Graphics g) {

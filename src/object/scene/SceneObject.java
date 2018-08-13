@@ -6,7 +6,7 @@ import object.GameObject;
 
 public abstract class SceneObject extends GameObject {
 	
-	Scene scene;
+	protected Scene scene;
 	Camera camera;
 	
 	protected SceneObject (Scene scene) {

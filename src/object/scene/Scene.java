@@ -27,9 +27,8 @@ public class Scene {
 	
 	public Scene(GameManager gm) {
 		this.gm = gm;
-		this.camera = new Camera(new Vector2(0, 0), 			// Position
-				new Vector2(gm.windowWidth, gm.windowHeight), // Size
-				Vector2.Zero);							// Focus (Later change to model position)
+		this.camera = new Camera(new Vector2(-400, -300), 			// Position
+				new Vector2(gm.windowWidth, gm.windowHeight)); 	// Size
 	
 		this.sceneObjects = new ArrayList<>();
 		this.addQueue = new ArrayList<>();
@@ -52,11 +51,16 @@ public class Scene {
 		newModel();
 	}
 	
-	private void newModel() {
+	public void newModel() {
 		removeSceneObject(model);
-		model = Model.RandomModel(0, 0, 200, 200, 3, this);
+		model = Model.RandomModel(0, 0, 200, 200, 5, this);
 		addSceneObject(model);
-		camera.setFocus(new Vector2(model.getX(), model.getY()));
+	}
+	
+	public void newModel(Model m) {
+		removeSceneObject(model);
+		model = m;
+		addSceneObject(model);
 	}
 	
 	public void addSceneObject(SceneObject o) {
@@ -86,17 +90,10 @@ public class Scene {
 	}
 
 	public void keyPressedEvent(KeyEvent e) {	
-		if (e.getKeyChar() == KeyEvent.VK_SPACE) {
-			model.contractMuscles();
-		}
+		
 	}
 
 	public void keyReleasedEvent(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_R) {
-			newModel();
-		} else if (e.getKeyChar() == KeyEvent.VK_SPACE) {
-			model.relaxMuscles();
-		}
 	}
 	
 	public Camera getCamera() {

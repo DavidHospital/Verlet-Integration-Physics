@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 
+import genetic.Population;
 import object.scene.Scene;
 
 public class GameManager {
@@ -12,32 +13,30 @@ public class GameManager {
 	public int windowWidth;
 	public int windowHeight;
 	
-	private Scene scene;
+	Population p;
 	
 	public GameManager(int windowWidth, int windowHeight) {
 		this.windowWidth = windowWidth;
 		this.windowHeight = windowHeight;
 		
-		this.scene = new Scene(this);
+		p = new Population(new Scene(this), 100, 0.05);
 	}
 	
 	void update() {
-		scene.update();
+		p.nextGeneration();
 	}
 	
 	void render(Graphics g) {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, windowWidth, windowHeight);
 		
-		scene.render(g);
+		p.getBest().render(g);
 	}
 
 	public void keyPressedEvent(KeyEvent e) {
-		scene.keyPressedEvent(e);
 	}
 
 	public void keyReleasedEvent(KeyEvent e) {
-		scene.keyReleasedEvent(e);
 	}
 
 }
